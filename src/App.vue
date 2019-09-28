@@ -1,69 +1,78 @@
 <template>
   <div id="app">
-    <div>
-      Add Google Sheet URL
-      <input type="text" v-model="sheetUrl">
-      <button @click="convertSheetToJson">
-        Convert to JSON
-      </button>
-    </div>
-
-    <div v-if="datasets">
+    <div v-if="!chartId">
       <div>
-        <p>Select chart type</p>
-
-        <div>
-          <input type="radio" value="Line" name="type" @change="selectChartType(1)">
-          <label for="huey">Line</label>
-        </div>
-
-        <div>
-          <input type="radio" value="Bar" name="type" @change="selectChartType(2)">
-          <label for="dewey">Bar</label>
-        </div>
-
-        <div>
-          <input type="radio" value="Pie" name="type" @change="selectChartType(3)">
-          <label for="louie">Pie</label>
-        </div>
+        Add Google Sheet URL
+        <input type="text" v-model="sheetUrl">
+        <button @click="convertSheetToJson">
+          Convert to JSON
+        </button>
       </div>
 
-      <div v-if="chartType">
-        <p>Select chart style</p>
-
+      <div v-if="datasets">
         <div>
-          <input type="radio" value="xkcd" name="style" @change="selectChartStyle(1)">
-          <label for="huey">xkcd</label>
+          <p>Select chart type</p>
+
+          <div>
+            <input type="radio" value="Line" name="type" @change="selectChartType(1)">
+            <label for="huey">Line</label>
+          </div>
+
+          <div>
+            <input type="radio" value="Bar" name="type" @change="selectChartType(2)">
+            <label for="dewey">Bar</label>
+          </div>
+
+          <div>
+            <input type="radio" value="Pie" name="type" @change="selectChartType(3)">
+            <label for="louie">Pie</label>
+          </div>
         </div>
 
-        <div>
-          <input type="radio" value="Chart.js" name="style" @change="selectChartStyle(2)">
-          <label for="dewey">Chart.js</label>
+        <div v-if="chartType">
+          <p>Select chart style</p>
+
+          <div>
+            <input type="radio" value="xkcd" name="style" @change="selectChartStyle(1)">
+            <label for="huey">xkcd</label>
+          </div>
+
+          <div>
+            <input type="radio" value="Chart.js" name="style" @change="selectChartStyle(2)">
+            <label for="dewey">Chart.js</label>
+          </div>
         </div>
+
+        <button
+          v-if="this.chartType && this.chartStyle"
+          @click="saveChart">
+          Share
+        </button>
       </div>
-      
-      <ChartLine
-        v-if="line"
-        :config="line" />
-      
-      <ChartBar
-        v-if="bar"
-        :config="bar" />
-      
-      <ChartPie
-        v-if="pie"
-        :config="pie" />
-
-      <canvas
-        id="myChart" />
     </div>
+      
+    <ChartLine
+      v-if="line"
+      :config="line" />
+    
+    <ChartBar
+      v-if="bar"
+      :config="bar" />
+    
+    <ChartPie
+      v-if="pie"
+      :config="pie" />
+
+    <canvas
+      id="myChart" />
   </div>
 </template>
 
 <script>
 import Chart from 'chart.js'
 import { getJsonObject } from 'sheetyjs'
-import { ChartLine, ChartBar, ChartPie } from 'chart.xkcd-vue-wrapper';
+import { ChartLine, ChartBar, ChartPie } from 'chart.xkcd-vue-wrapper'
+import { saveChart, getChart } from './helpers/db'
 
 export default {
   name: 'app',
@@ -84,6 +93,26 @@ export default {
       context: null,
       labels: null,
       datasets: null,
+      chartId: null,
+    }
+  },
+  created: async function () {
+    this.chartId = window.location.pathname.replace('/', '')
+    if (this.chartId) {
+      try {
+        const chart = await getChart(this.chartId)
+        
+        if (chart) {
+          this.chartType = chart.type
+          this.chartStyle = chart.style
+          this.labels = chart.labels
+          this.datasets = chart.datasets
+          this.$nextTick(() => this.chartIt())
+        }
+      } catch(e) {
+        this.chartId = null
+        window.location.href = '/'
+      }
     }
   },
   methods:{
@@ -101,8 +130,8 @@ export default {
             data[index].push(key)
           }
           data[index].push(value[key])
-        });
-      });
+        })
+      })
 
       this.labels = data.splice(0, 1)[0]
       this.datasets = data.reduce((prev, curr) => {
@@ -128,7 +157,7 @@ export default {
       this.chartjs = null
       if (this.context) {
         const canvas = document.getElementById('myChart')
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
+        this.context.clearRect(0, 0, canvas.width, canvas.height)
       }
     },
     chartIt() {
@@ -148,7 +177,7 @@ export default {
             },
           }
         } else if (this.chartStyle === 2) {
-          this.context = document.getElementById('myChart').getContext('2d');
+          this.context = document.getElementById('myChart').getContext('2d')
           this.chartjs = new Chart(this.context, {
             type: 'line',
             data: {
@@ -169,7 +198,7 @@ export default {
             },
           }
         } else if (this.chartStyle === 2) {
-          this.context = document.getElementById('myChart').getContext('2d');
+          this.context = document.getElementById('myChart').getContext('2d')
           this.chartjs = new Chart(this.context, {
             type: 'bar',
             data: {
@@ -190,7 +219,7 @@ export default {
             },
           }
         } else if (this.chartStyle === 2) {
-          this.context = document.getElementById('myChart').getContext('2d');
+          this.context = document.getElementById('myChart').getContext('2d')
           this.chartjs = new Chart(this.context, {
             type: 'pie',
             data: {
@@ -200,7 +229,17 @@ export default {
           })
         }
       }
-    }
+    },
+    async saveChart() {
+      const chart = {
+        type: this.chartType,
+        style: this.chartStyle,
+        labels: this.labels,
+        datasets: this.datasets,
+      }
+      const data = await saveChart(chart)
+      window.location.href = `/${data.id}`
+    },
   },
 }
 </script>
