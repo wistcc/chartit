@@ -20,6 +20,13 @@
 <script>
 import Chart from 'chart.js'
 import { ChartLine, ChartBar, ChartPie } from 'chart.xkcd-vue-wrapper'
+import {
+  CHART_TYPE_LINE,
+  CHART_TYPE_BAR,
+  CHART_TYPE_PIE,
+  CHART_STYLE_XKCD,
+  CHART_STYLE_CHARTJS,
+} from '../helpers/constants'
 
 export default {
   name: 'Chart',
@@ -78,8 +85,8 @@ export default {
     chartIt() {
       this.reset()
       
-      if (this.chartType === 1) {
-        if (this.chartStyle === 1) {
+      if (this.chartType === CHART_TYPE_LINE) {
+        if (this.chartStyle === CHART_STYLE_XKCD) {
           this.line = {
             // title: '30 days pushups challenge',
             xLabel: this.labels[0],
@@ -89,7 +96,7 @@ export default {
               datasets: this.transformedDataset,
             },
           }
-        } else if (this.chartStyle === 2) {
+        } else if (this.chartStyle === CHART_STYLE_CHARTJS) {
           this.context = document.getElementById('myChart').getContext('2d')
           this.chartjs = new Chart(this.context, {
             type: 'line',
@@ -99,8 +106,8 @@ export default {
             },
           })
         }
-      } else if (this.chartType === 2) {
-        if (this.chartStyle === 1) {
+      } else if (this.chartType === CHART_TYPE_BAR) {
+        if (this.chartStyle === CHART_STYLE_XKCD) {
           this.bar = {
             // title: '30 days pushups challenge',
             xLabel: this.labels[0],
@@ -110,7 +117,7 @@ export default {
               datasets: this.transformedDataset,
             },
           }
-        } else if (this.chartStyle === 2) {
+        } else if (this.chartStyle === CHART_STYLE_CHARTJS) {
           this.context = document.getElementById('myChart').getContext('2d')
           this.chartjs = new Chart(this.context, {
             type: 'bar',
@@ -120,8 +127,8 @@ export default {
             },
           })
         }
-      } else if (this.chartType === 3) {
-        if (this.chartStyle === 1) {
+      } else if (this.chartType === CHART_TYPE_PIE) {
+        if (this.chartStyle === CHART_STYLE_XKCD) {
           this.pie = {
             // title: '30 days pushups challenge',
             xLabel: this.labels[0],
@@ -131,7 +138,7 @@ export default {
               datasets: this.transformedDataset,
             },
           }
-        } else if (this.chartStyle === 2) {
+        } else if (this.chartStyle === CHART_STYLE_CHARTJS) {
           this.context = document.getElementById('myChart').getContext('2d')
           this.chartjs = new Chart(this.context, {
             type: 'pie',

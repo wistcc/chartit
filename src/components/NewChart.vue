@@ -13,17 +13,17 @@
         <p>Select chart type</p>
 
         <div>
-          <input type="radio" value="Line" name="type" @change="selectChartType(1)">
+          <input type="radio" value="Line" name="type" :checked="chartType === types.CHART_TYPE_LINE" @change="selectChartType(types.CHART_TYPE_LINE)">
           <label for="huey">Line</label>
         </div>
 
         <div>
-          <input type="radio" value="Bar" name="type" @change="selectChartType(2)">
+          <input type="radio" value="Bar" name="type" :checked="chartType === types.CHART_TYPE_BAR" @change="selectChartType(types.CHART_TYPE_BAR)">
           <label for="dewey">Bar</label>
         </div>
 
         <div>
-          <input type="radio" value="Pie" name="type" @change="selectChartType(3)">
+          <input type="radio" value="Pie" name="type" :checked="chartType === types.CHART_TYPE_PIE" @change="selectChartType(types.CHART_TYPE_PIE)">
           <label for="louie">Pie</label>
         </div>
       </div>
@@ -32,12 +32,12 @@
         <p>Select chart style</p>
 
         <div>
-          <input type="radio" value="xkcd" name="style" @change="selectChartStyle(1)">
+          <input type="radio" value="xkcd" name="style" :checked="chartType === styles.CHART_STYLE_XKCD" @change="selectChartStyle(styles.CHART_STYLE_XKCD)">
           <label for="huey">xkcd</label>
         </div>
 
         <div>
-          <input type="radio" value="Chart.js" name="style" @change="selectChartStyle(2)">
+          <input type="radio" value="Chart.js" name="style" :checked="chartType === styles.CHART_STYLE_CHARTJS" @change="selectChartStyle(styles.CHART_STYLE_CHARTJS)">
           <label for="dewey">Chart.js</label>
         </div>
       </div>
@@ -62,6 +62,13 @@
 import { getJsonObject } from 'sheetyjs'
 import { saveChart } from '../helpers/db'
 import Chart from './Chart'
+import {
+  CHART_TYPE_LINE,
+  CHART_TYPE_BAR,
+  CHART_TYPE_PIE,
+  CHART_STYLE_XKCD,
+  CHART_STYLE_CHARTJS,
+} from '../helpers/constants'
 
 export default {
   name: 'NewChart',
@@ -71,11 +78,20 @@ export default {
   data: function () {
     return {
       sheetUrl: '',
-      chartType: null,
-      chartStyle: null,
+      chartType: CHART_TYPE_LINE,
+      chartStyle: CHART_STYLE_XKCD,
       labels: null,
       datasets: null,
       chartId: null,
+      types: {
+        CHART_TYPE_LINE,
+        CHART_TYPE_BAR,
+        CHART_TYPE_PIE,
+      },
+      styles: {
+        CHART_STYLE_XKCD,
+        CHART_STYLE_CHARTJS,
+      },
     }
   },
   computed: {
