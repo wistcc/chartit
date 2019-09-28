@@ -4,17 +4,32 @@
       <p>Select chart type</p>
 
       <div>
-        <input type="radio" value="Line" name="type" :checked="chartType === types.CHART_TYPE_LINE" @change="selectChartType(types.CHART_TYPE_LINE)">
+        <input
+          type="radio"
+          value="Line"
+          name="type"
+          :checked="chartType === types.CHART_TYPE_LINE"
+          @change="selectChartType(types.CHART_TYPE_LINE)">
         <label for="huey">Line</label>
       </div>
 
       <div>
-        <input type="radio" value="Bar" name="type" :checked="chartType === types.CHART_TYPE_BAR" @change="selectChartType(types.CHART_TYPE_BAR)">
+        <input
+          type="radio"
+          value="Bar"
+          name="type"
+          :checked="chartType === types.CHART_TYPE_BAR"
+          @change="selectChartType(types.CHART_TYPE_BAR)">
         <label for="dewey">Bar</label>
       </div>
 
       <div>
-        <input type="radio" value="Pie" name="type" :checked="chartType === types.CHART_TYPE_PIE" @change="selectChartType(types.CHART_TYPE_PIE)">
+        <input
+          type="radio"
+          value="Pie"
+          name="type"
+          :checked="chartType === types.CHART_TYPE_PIE"
+          @change="selectChartType(types.CHART_TYPE_PIE)">
         <label for="louie">Pie</label>
       </div>
     </div>
@@ -23,12 +38,22 @@
       <p>Select chart style</p>
 
       <div>
-        <input type="radio" value="xkcd" name="style" :checked="chartStyle === styles.CHART_STYLE_XKCD" @change="selectChartStyle(styles.CHART_STYLE_XKCD)">
+        <input
+          type="radio"
+          value="xkcd"
+          name="style"
+          :checked="chartStyle === styles.CHART_STYLE_XKCD"
+          @change="selectChartStyle(styles.CHART_STYLE_XKCD)">
         <label for="huey">xkcd</label>
       </div>
 
       <div>
-        <input type="radio" value="Chart.js" name="style" :checked="chartStyle === styles.CHART_STYLE_CHARTJS" @change="selectChartStyle(styles.CHART_STYLE_CHARTJS)">
+        <input
+          type="radio"
+          value="Chart.js"
+          name="style"
+          :checked="chartStyle === styles.CHART_STYLE_CHARTJS"
+          @change="selectChartStyle(styles.CHART_STYLE_CHARTJS)">
         <label for="dewey">Chart.js</label>
       </div>
     </div>
@@ -123,6 +148,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-</style>

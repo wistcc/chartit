@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-if="isLoaded">
+  <div id="app" v-if="hasLoaded">
     <NewChart 
       v-if="!chartId" />
     <ChartPage
@@ -21,7 +21,7 @@ export default {
   },
   data: function () {
     return {
-      isLoaded: false,
+      hasLoaded: false,
       chartId: null,
       chart: null,
     }
@@ -42,10 +42,7 @@ export default {
       }
     }
 
-    this.isLoaded = true
+    this.hasLoaded = true
   },
 }
 </script>
-
-<style>
-</style>
