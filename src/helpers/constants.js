@@ -4,4 +4,4 @@ export const CHART_TYPE_PIE = 3
 export const CHART_STYLE_XKCD = 1
 export const CHART_STYLE_CHARTJS = 2
 
-export const COLLECTION_CHARTS = 'charts'
+export const COLLECTION_CHARTS = process.env.NODE_ENV === 'development' ? 'test_charts' : 'charts'
