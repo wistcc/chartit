@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="hasLoaded">
     <div>
       <p>Select chart type</p>
 
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { saveChart } from '../helpers/db'
+import { getChart, saveChart } from '../helpers/db'
 import Chart from './Chart'
 import {
   CHART_TYPE_LINE,
@@ -89,11 +89,10 @@ export default {
   components: {
     Chart,
   },
-  props: {
-    chart: Object,
-  },
   data: function () {
     return {
+      chart: null,
+      hasLoaded: false,
       chartType: null,
       chartStyle: null,
       labels: null,
@@ -121,11 +120,20 @@ export default {
         || this.chartStyle !== this.chart.style
     },
   },
-  created() {
-    this.chartType = this.chart.type
-    this.chartStyle = this.chart.style
-    this.labels = this.chart.labels
-    this.datasets = this.chart.datasets
+  created: async function () {
+    const chart = await getChart(this.$route.params.id)
+    
+    if (chart) {
+      this.chart = chart
+      this.chartType = chart.type
+      this.chartStyle = chart.style
+      this.labels = chart.labels
+      this.datasets = chart.datasets
+    } else {
+      this.$router.push('/')
+    }
+
+    this.hasLoaded = true
   },
   methods: {
     selectChartType(type) {
@@ -143,7 +151,7 @@ export default {
       }
       
       const data = await saveChart(chart)
-      window.location.href = `/${data.id}`
+      this.$router.push(`/chart/${data.id}`)
     },
   },
 }
