@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import 'firebase/firestore'
+import { COLLECTION_CHARTS } from './constants'
 
 let db
 
@@ -13,10 +13,10 @@ export const initialize = () => {
   db = firebase.firestore()
 }
 
-export const saveChart = async chart => await db.collection("charts").add(chart)
+export const saveChart = async chart => await db.collection(COLLECTION_CHARTS).add(chart)
 
 export const getChart = async chartId => {
-  const chart = await db.collection("charts").doc(chartId).get()
+  const chart = await db.collection(COLLECTION_CHARTS).doc(chartId).get()
   if (chart.exists) {
     return chart.data()
   }
