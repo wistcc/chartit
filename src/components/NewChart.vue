@@ -51,7 +51,7 @@
             type="radio"
             value="xkcd"
             name="style"
-            :checked="chartType === styles.CHART_STYLE_XKCD"
+            :checked="chartStyle === styles.CHART_STYLE_XKCD"
             @change="selectChartStyle(styles.CHART_STYLE_XKCD)">
           <label for="huey">xkcd</label>
         </div>
@@ -61,7 +61,7 @@
             type="radio"
             value="Chart.js"
             name="style"
-            :checked="chartType === styles.CHART_STYLE_CHARTJS"
+            :checked="chartStyle === styles.CHART_STYLE_CHARTJS"
             @change="selectChartStyle(styles.CHART_STYLE_CHARTJS)">
           <label for="dewey">Chart.js</label>
         </div>
@@ -167,7 +167,7 @@ export default {
       }
       
       const data = await saveChart(chart)
-      window.location.href = `/${data.id}`
+      this.$router.push(`/chart/${data.id}`)
     },
   },
 }
