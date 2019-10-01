@@ -8,10 +8,14 @@
     <ChartLine
       v-if="line"
       :config="line" />
+
+    <canvas
+      id="myChart" />
   </div>
 </template>
 
 <script>
+import Chart from 'chart.js'
 import { getJsonObject } from 'sheetyjs'
 import { ChartLine } from 'chart.xkcd-vue-wrapper';
 
@@ -54,7 +58,7 @@ export default {
       }, [])
       
       this.line = {
-        title: '30 days pushups challenge',
+        // title: '30 days pushups challenge',
         xLabel: labels.splice(0, 1)[0],
         // yLabel: 'Pushups',
         data: {
@@ -62,6 +66,15 @@ export default {
           datasets,
         },
       }
+
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets,
+        },
+      })
     }
   },
 }
